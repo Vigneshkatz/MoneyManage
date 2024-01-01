@@ -1,6 +1,6 @@
 package com.katziio.app.controller.user;
 
-import com.katziio.app.dto.Response;
+import com.katziio.app.dto.response.Response;
 import com.katziio.app.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

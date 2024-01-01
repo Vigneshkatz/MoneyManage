@@ -1,7 +1,7 @@
 package com.katziio.app.controller.account;
 
-import com.katziio.app.dto.Request;
-import com.katziio.app.dto.Response;
+import com.katziio.app.dto.request.Request;
+import com.katziio.app.dto.response.Response;
 import com.katziio.app.service.account.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
