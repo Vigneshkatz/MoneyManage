@@ -1,7 +1,10 @@
 package com.katziio.app.model;
 
+import com.katziio.app.util.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -17,4 +20,5 @@ public class User {
     private String phone;
     private String password;
     private Boolean isVerified;
+    private List<Role> roleList;
 }
