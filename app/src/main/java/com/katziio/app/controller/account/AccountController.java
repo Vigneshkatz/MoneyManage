@@ -18,6 +18,10 @@ public class AccountController {
     @PostMapping("/create")
     public Response createAccount(@RequestBody Request request)
     {
-        return this.accountService.create(request);
+        try {
+            return this.accountService.create(request);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
