@@ -1,17 +1,15 @@
-package com.katziio.app.dto;
+package com.katziio.app.dto.request;
 
 import com.katziio.app.model.User;
 import com.katziio.app.util.enums.AccountType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class AccountDTO {
+@Getter
+@Setter
+public class AccountRequestDTO {
     private Long id;
     private User user;
     private Long accountNumber;
@@ -25,6 +23,4 @@ public class AccountDTO {
     private Boolean isActive;
     private Date createdAt;
     private AccountType accountType;
-    private Long accountMonthlySpendLimit;
-    private Long monthlySpent;
 }

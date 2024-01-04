@@ -1,4 +1,4 @@
-package com.katziio.app.dto;
+package com.katziio.app.dto.error;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

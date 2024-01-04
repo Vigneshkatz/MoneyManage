@@ -1,18 +1,16 @@
 package com.katziio.app.service.user;
 
-import com.katziio.app.dto.ErrorDTO;
-import com.katziio.app.dto.Response;
+import com.katziio.app.dto.error.ErrorDTO;
+import com.katziio.app.dto.response.Response;
 import com.katziio.app.model.Otp;
 import com.katziio.app.model.User;
 import com.katziio.app.repository.user.OtpRepository;
 import com.katziio.app.repository.user.UserRepository;
 import com.katziio.app.service.email.EmailSenderService;
-import com.katziio.app.util.constant.Constants;
 import com.katziio.app.util.user.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService{

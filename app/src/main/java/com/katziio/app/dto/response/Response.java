@@ -1,7 +1,10 @@
-package com.katziio.app.dto;
+package com.katziio.app.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.katziio.app.dto.error.ErrorDTO;
 import lombok.*;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -11,4 +14,6 @@ public class Response {
     private Object content;
     @JsonProperty("response")
     private ErrorDTO response;
+    @JsonProperty("emptyField")
+    private List<String> emptyField;
 }
