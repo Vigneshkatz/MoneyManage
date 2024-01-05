@@ -1,6 +1,6 @@
 package com.katziio.app.model;
 
-import com.katziio.app.dto.AccountDTO;
+import com.katziio.app.dto.request.AccountDTO;
 import com.katziio.app.util.enums.AccountType;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -31,8 +31,7 @@ public class Account {
     private AccountType accountType;
     private Long accountMonthlySpendLimit;
     private Long monthlySpent;
-    public Account(AccountDTO other)
-    {
+    public Account(AccountDTO other) {
         this.id = other.getId()==null?null:other.getId();
         this.user = other.getUser();
         this.accountNumber = other.getAccountNumber();
@@ -50,8 +49,7 @@ public class Account {
         this.monthlySpent = other.getMonthlySpent();
     }
 
-    public Account(Account other)
-    {
+    public Account(Account other) {
         this.id = other.getId();
         this.user = other.getUser();
         this.accountNumber = other.getAccountNumber();

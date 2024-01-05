@@ -1,7 +1,7 @@
 package com.katziio.app.controller.account;
 
-import com.katziio.app.dto.Request;
-import com.katziio.app.dto.response.Response;
+import com.katziio.app.dto.request.RequestDTO;
+import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.service.account.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,18 +13,26 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping("/create")
-    public Response createAccount(@RequestBody Request request) {
+    public ResponseDTO createAccount(@RequestBody RequestDTO request) {
         try {
-            return this.accountService.create(request);
+            return this.accountService.createAccount(request);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @PutMapping("/update")
-    public Response updateAccount(@RequestBody Request request) {
+    public ResponseDTO updateAccount(@RequestBody RequestDTO request) {
         try {
-            return this.accountService.update(request);
+            return this.accountService.updateAccount(request);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @PutMapping("/delete/{id}")
+    public ResponseDTO deleteAccount(@PathVariable Long id) {
+        try {
+            return this.accountService.deleteAccount(id);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
