@@ -1,12 +1,10 @@
 package com.katziio.app.service.account;
 
-import com.katziio.app.dto.AccountDTO;
+import com.katziio.app.dto.request.AccountDTO;
 import com.katziio.app.dto.error.ErrorDTO;
-import com.katziio.app.dto.Request;
-import com.katziio.app.dto.response.Response;
-import com.katziio.app.exception.DataAlreadyExists;
-import com.katziio.app.exception.ErrorOnSavingInTable;
-import com.katziio.app.exception.InvalidDTOException;
+import com.katziio.app.dto.request.RequestDTO;
+import com.katziio.app.dto.response.ResponseDTO;
+import com.katziio.app.exception.*;
 import com.katziio.app.model.Account;
 import com.katziio.app.repository.account.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +18,8 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    public Response create(Request request) throws Exception {
-        Response response = new Response();
+    public ResponseDTO createAccount(RequestDTO request) throws Exception {
+        ResponseDTO response = new ResponseDTO();
         ErrorDTO errorDTO = new ErrorDTO();
         if (request != null) {
             if (request.getIsAccountDto()) {
@@ -36,6 +34,7 @@ public class AccountServiceImpl implements AccountService {
                         throw new ErrorOnSavingInTable("on Account Repo" + e.getMessage());
                     }
                 } else {
+                    errorDTO.setIsEmptyField(true);
                     errorDTO.setEmptyField(isError);
                 }
 
@@ -49,8 +48,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Response update(Request request) {
-        Response response = new Response();
+    public ResponseDTO updateAccount(RequestDTO request) {
+        ResponseDTO response = new ResponseDTO();
         ErrorDTO errorDTO = new ErrorDTO();
        if(request!=null)
        {
@@ -87,7 +86,6 @@ public class AccountServiceImpl implements AccountService {
                } else {
                    errorDTO.setEmptyField(isError);
                }
-
            } else {
                try {
                    throw new InvalidDTOException("Request dto does not have Account DTO");
@@ -99,6 +97,36 @@ public class AccountServiceImpl implements AccountService {
            throw new NullPointerException("Request is null");
        }
         return null;
+    }
+
+    @Override
+    public ResponseDTO deleteAccount(Long id) {
+        if(id<=0)
+        {
+            try {
+                throw new InvalidIDException("enter a valid id");
+            } catch (InvalidIDException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Optional<Account> optionalAccount = this.accountRepository.findById(id);
+        if(optionalAccount.isEmpty())
+        {
+            try {
+                throw new DataNotFoundException("No data fount for this id");
+            } catch (DataNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }else {
+            try {
+                this.accountRepository.delete(optionalAccount.get());
+            }catch (Exception e)
+            {
+                throw new RuntimeException("Error on deleting account"+e.getMessage());
+            }
+        }
+        return null;
+
     }
 
     public List<String> isValidAccountDTO(AccountDTO accountDTO) {
