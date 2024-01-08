@@ -12,6 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountDTO {
+    private Long id;
     private User user;
     private Long accountNumber;
     private Long currentBalance;

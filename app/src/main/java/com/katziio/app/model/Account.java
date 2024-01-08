@@ -33,6 +33,26 @@ public class Account {
     private Long monthlySpent;
     public Account(AccountDTO other)
     {
+        this.id = other.getId()==null?null:other.getId();
+        this.user = other.getUser();
+        this.accountNumber = other.getAccountNumber();
+        this.currentBalance = other.getCurrentBalance();
+        this.cardNumber = other.getCardNumber();
+        this.cvv = other.getCvv();
+        this.bankName = other.getBankName();
+        this.ifsc = other.getIfsc();
+        this.phoneLinked = other.getPhoneLinked();
+        this.isNetBanking = other.getIsNetBanking();
+        this.isActive = other.getIsActive();
+        this.createdAt = other.getCreatedAt();
+        this.accountType = other.getAccountType();
+        this.accountMonthlySpendLimit = other.getAccountMonthlySpendLimit();
+        this.monthlySpent = other.getMonthlySpent();
+    }
+
+    public Account(Account other)
+    {
+        this.id = other.getId();
         this.user = other.getUser();
         this.accountNumber = other.getAccountNumber();
         this.currentBalance = other.getCurrentBalance();
