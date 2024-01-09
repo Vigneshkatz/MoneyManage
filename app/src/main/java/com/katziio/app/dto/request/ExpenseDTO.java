@@ -1,18 +1,12 @@
-package com.katziio.app.model;
+package com.katziio.app.dto.request;
 
 import com.katziio.app.util.enums.ExpenseCategory;
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
 
-@Entity
 @Data
-@Table(name = "account_activity")
-public class ExpenseActivity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE )
-    @Column(name = "activity_id")
+public class ExpenseDTO {
     private Long id;
     private Date time;
     private Long amountSpent;

@@ -1,12 +1,13 @@
 package com.katziio.app.service.user;
 
 import com.katziio.app.dto.error.ErrorDTO;
-import com.katziio.app.dto.response.Response;
+import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.model.Otp;
 import com.katziio.app.model.User;
 import com.katziio.app.repository.user.OtpRepository;
 import com.katziio.app.repository.user.UserRepository;
 import com.katziio.app.service.email.EmailSenderService;
+import com.katziio.app.util.CustomUtil;
 import com.katziio.app.util.user.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,8 +21,8 @@ public class UserServiceImpl implements UserService{
     private EmailSenderService emailSenderService;
     @Autowired
     private OtpRepository otpRepository;
-    public Response createUser(String phone) {
-        Response response = new Response();
+    public ResponseDTO createUser(String phone) {
+        ResponseDTO response = new ResponseDTO();
         ErrorDTO errorDTO = new ErrorDTO();
 //        UserDTO userDTO = new UserDTO();
         if (phone.isBlank()) {
@@ -74,8 +75,25 @@ public class UserServiceImpl implements UserService{
         return response;
     }
 
-    public Response verifyOtp(String phone, String otp) {
+    public ResponseDTO verifyOtp(String phone, String otp) {
         return null;
+    }
+
+    @Override
+    public Boolean isValidUser(Long userId) {
+        if(!CustomUtil.isValidObject(userId)) {
+            return false;
+        }
+       return this.userRepository.existsById(userId);
+    }
+
+    @Override
+    public User getAccountById(Long userId) {
+        if(!CustomUtil.isValidObject(userId)) {
+            return null;
+        }
+        Optional<User> userOptional=  this.userRepository.findById(userId);
+        return userOptional.orElse(null);
     }
 
     private void createOtp(User user, String otpString) {

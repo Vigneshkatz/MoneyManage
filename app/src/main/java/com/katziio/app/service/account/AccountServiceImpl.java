@@ -7,6 +7,7 @@ import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.exception.*;
 import com.katziio.app.model.Account;
 import com.katziio.app.repository.account.AccountRepository;
+import com.katziio.app.util.CustomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -127,6 +128,23 @@ public class AccountServiceImpl implements AccountService {
         }
         return null;
 
+    }
+
+    @Override
+    public Boolean isValidAccount(Long accountId) {
+        if(!CustomUtil.isValidObject(accountId)){
+            return false;
+        }
+        return this.accountRepository.existsById(accountId);
+    }
+
+    @Override
+    public Account getAccountById(Long accountId) {
+        if(!CustomUtil.isValidObject(accountId)){
+            return null;
+        }
+        Optional<Account> optionalAccount =  this.accountRepository.findById(accountId);
+        return optionalAccount.orElse(null);
     }
 
     public List<String> isValidAccountDTO(AccountDTO accountDTO) {
