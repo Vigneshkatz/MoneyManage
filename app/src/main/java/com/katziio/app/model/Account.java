@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -31,6 +32,8 @@ public class Account {
     private AccountType accountType;
     private Long accountMonthlySpendLimit;
     private Long monthlySpent;
+    @OneToMany(mappedBy = "expense")
+    private List<Expense> expensesList;
     public Account(AccountDTO other) {
         this.id = other.getId()==null?null:other.getId();
         this.user = other.getUser();
@@ -47,6 +50,7 @@ public class Account {
         this.accountType = other.getAccountType();
         this.accountMonthlySpendLimit = other.getAccountMonthlySpendLimit();
         this.monthlySpent = other.getMonthlySpent();
+
     }
 
     public Account(Account other) {

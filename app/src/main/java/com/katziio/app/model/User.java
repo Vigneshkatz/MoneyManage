@@ -21,4 +21,6 @@ public class User {
     private String password;
     private Boolean isVerified;
     private List<Role> roleList;
+    @OneToMany(mappedBy = "user")
+    private List<Account> accountList;
 }

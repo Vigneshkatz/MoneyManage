@@ -23,6 +23,9 @@ public class Expense {
     private Long updatedBalance;
     private ExpenseCategory category;
     private String spentOn;
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     public Expense(ExpenseDTO expenseDTO)
     {
