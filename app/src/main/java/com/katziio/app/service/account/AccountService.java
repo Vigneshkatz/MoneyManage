@@ -15,4 +15,5 @@ public interface AccountService {
     Boolean isValidAccount(Long accountId);
 
     Account getAccountById(Long accountId);
+
 }

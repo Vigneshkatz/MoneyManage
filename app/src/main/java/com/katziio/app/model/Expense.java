@@ -15,7 +15,6 @@ import java.util.Date;
 public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE )
-    @Column(name = "activity_id")
     private Long id;
     private Date time;
     private Long amountSpent;
@@ -36,5 +35,15 @@ public class Expense {
        this.initialBalance = expenseDTO.getInitialBalance();
        this.updatedBalance = expenseDTO.getUpdatedBalance();
        this.spentOn = expenseDTO.getSpentOn();
+    }
+
+    public Expense(Expense expense) {
+        this.id = expense.getId();
+        this.spentOn = expense.getSpentOn();
+        this.updatedBalance = expense.getUpdatedBalance();
+        this.category = expense.getCategory();
+        this.amountSpent = expense.getAmountSpent();
+        this.account = expense.getAccount();
+        this.initialBalance = expense.getInitialBalance();
     }
 }

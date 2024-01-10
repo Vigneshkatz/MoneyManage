@@ -10,11 +10,10 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "user_account")
+@Table(name = "users_account")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "account_id")
     private Long id;
     @ManyToOne
     @JoinColumn(referencedColumnName = "id")
@@ -32,7 +31,7 @@ public class Account {
     private AccountType accountType;
     private Long accountMonthlySpendLimit;
     private Long monthlySpent;
-    @OneToMany(mappedBy = "expense")
+    @OneToMany(mappedBy = "account")
     private List<Expense> expensesList;
     public Account(AccountDTO other) {
         this.id = other.getId()==null?null:other.getId();

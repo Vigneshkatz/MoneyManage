@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService{
             }
         }
         response.setContent(null);
-        response.setResponse(errorDTO);
+        response.setErrorDTO(errorDTO);
         return response;
     }
 
@@ -95,6 +95,7 @@ public class UserServiceImpl implements UserService{
         Optional<User> userOptional=  this.userRepository.findById(userId);
         return userOptional.orElse(null);
     }
+
 
     private void createOtp(User user, String otpString) {
         Otp otp = new Otp();

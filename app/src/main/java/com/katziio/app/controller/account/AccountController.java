@@ -3,14 +3,20 @@ package com.katziio.app.controller.account;
 import com.katziio.app.dto.request.RequestDTO;
 import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.service.account.AccountService;
+import com.katziio.app.service.account.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/account")
 public class AccountController {
+
+    private final AccountService accountService;
+
     @Autowired
-    private AccountService accountService;
+    public AccountController(){
+        this.accountService = new AccountServiceImpl();
+    }
 
     @PostMapping("/create")
     public ResponseDTO createAccount(@RequestBody RequestDTO request) {

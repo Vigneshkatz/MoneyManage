@@ -1,24 +1,29 @@
 package com.katziio.app.controller.user;
 
-import com.katziio.app.dto.response.Response;
+import com.katziio.app.dto.response.ResponseDTO;
+import com.katziio.app.service.account.AccountServiceImpl;
 import com.katziio.app.service.user.UserService;
+import com.katziio.app.service.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/user")
 public class UserController {
+    private final UserService userService;
     @Autowired
-    private UserService userService;
+    public UserController(){
+        this.userService = new UserServiceImpl();
+    }
 
     @PostMapping("/login")
-    public Response createUser(@RequestBody String phone){
+    public ResponseDTO createUser(@RequestBody String phone){
         System.out.println(phone);
         return userService.createUser(phone);
     }
 
     @PostMapping("/verify-otp/{phone}/{otp}")
-    public Response verifyUser(@RequestParam("phone") String phone, @RequestParam("otp") String otp){
+    public ResponseDTO verifyUser(@RequestParam("phone") String phone, @RequestParam("otp") String otp){
         return this.userService.verifyOtp(phone,otp);
     }
 

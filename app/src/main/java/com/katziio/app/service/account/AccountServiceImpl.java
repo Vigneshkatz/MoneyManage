@@ -28,7 +28,7 @@ public class AccountServiceImpl implements AccountService {
                 if (isError.isEmpty()) {
                     try {
                         Account account =this.accountRepository.save( new Account(request.getAccountDTO()));
-                        response.setResponse(errorDTO);
+                        response.setErrorDTO(errorDTO);
                         response.setContent(account);
                         return response;
                     } catch (Exception e) {
