@@ -8,10 +8,14 @@ import com.katziio.app.repository.user.OtpRepository;
 import com.katziio.app.repository.user.UserRepository;
 import com.katziio.app.service.email.EmailSenderService;
 import com.katziio.app.util.CustomUtil;
+import com.katziio.app.util.helper.CSVHelper;
 import com.katziio.app.util.user.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.PrintWriter;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService{
@@ -105,6 +109,28 @@ public class UserServiceImpl implements UserService{
         otp.setEmail(user.getEmail());
         otp.setOtp_created_at(Calendar.getInstance().getTime());
         this.otpRepository.save(otp);
+    }
+
+    public List<User> readFile(MultipartFile file) {
+        if(!CSVHelper.hasCSVFormat(file))
+        {
+            System.out.println("not the expected file");
+            return null;
+        }
+        try {
+            List<User> userList = CSVHelper.csvToUser(file.getInputStream());
+            userRepository.saveAll(userList);
+            return userRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("fail to store csv data: " + e.getMessage());
+        }
+    }
+
+    public void writeEmployeesToCsv(PrintWriter writer) {
+        CSVHelper.writeEmployeesToCsv(writer,userRepository.findAll());
+    }
+    public void writeEmployeesToCsvCustom(PrintWriter writer, List<String> headerList) {
+        CSVHelper.writeEmployeesToCsvCustom(writer,userRepository.findAll(),headerList);
     }
 
 }

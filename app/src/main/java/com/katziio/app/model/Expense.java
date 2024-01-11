@@ -27,8 +27,7 @@ public class Expense {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    public Expense(ExpenseDTO expenseDTO)
-    {
+    public Expense(ExpenseDTO expenseDTO) {
        this.id = expenseDTO.getId() != null? expenseDTO.getId() : null;
        this.amountSpent = expenseDTO.getAmountSpent();
        this.category = expenseDTO.getCategory();
