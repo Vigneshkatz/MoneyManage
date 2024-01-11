@@ -1,18 +1,21 @@
 package com.katziio.app.service.user;
 
-import com.katziio.app.dto.ErrorDTO;
-import com.katziio.app.dto.Response;
+import com.katziio.app.dto.error.ErrorDTO;
+import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.model.Otp;
 import com.katziio.app.model.User;
 import com.katziio.app.repository.user.OtpRepository;
 import com.katziio.app.repository.user.UserRepository;
 import com.katziio.app.service.email.EmailSenderService;
-import com.katziio.app.util.constant.Constants;
+import com.katziio.app.util.CustomUtil;
+import com.katziio.app.util.helper.CSVHelper;
 import com.katziio.app.util.user.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.PrintWriter;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService{
@@ -22,8 +25,8 @@ public class UserServiceImpl implements UserService{
     private EmailSenderService emailSenderService;
     @Autowired
     private OtpRepository otpRepository;
-    public Response createUser(String phone) {
-        Response response = new Response();
+    public ResponseDTO createUser(String phone) {
+        ResponseDTO response = new ResponseDTO();
         ErrorDTO errorDTO = new ErrorDTO();
 //        UserDTO userDTO = new UserDTO();
         if (phone.isBlank()) {
@@ -76,8 +79,25 @@ public class UserServiceImpl implements UserService{
         return response;
     }
 
-    public Response verifyOtp(String phone, String otp) {
+    public ResponseDTO verifyOtp(String phone, String otp) {
         return null;
+    }
+
+    @Override
+    public Boolean isValidUser(Long userId) {
+        if(!CustomUtil.isValidObject(userId)) {
+            return false;
+        }
+       return this.userRepository.existsById(userId);
+    }
+
+    @Override
+    public User getAccountById(Long userId) {
+        if(!CustomUtil.isValidObject(userId)) {
+            return null;
+        }
+        Optional<User> userOptional=  this.userRepository.findById(userId);
+        return userOptional.orElse(null);
     }
 
     private void createOtp(User user, String otpString) {
@@ -89,6 +109,28 @@ public class UserServiceImpl implements UserService{
         otp.setEmail(user.getEmail());
         otp.setOtp_created_at(Calendar.getInstance().getTime());
         this.otpRepository.save(otp);
+    }
+
+    public List<User> readFile(MultipartFile file) {
+        if(!CSVHelper.hasCSVFormat(file))
+        {
+            System.out.println("not the expected file");
+            return null;
+        }
+        try {
+            List<User> userList = CSVHelper.csvToUser(file.getInputStream());
+            userRepository.saveAll(userList);
+            return userRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("fail to store csv data: " + e.getMessage());
+        }
+    }
+
+    public void writeEmployeesToCsv(PrintWriter writer) {
+        CSVHelper.writeEmployeesToCsv(writer,userRepository.findAll());
+    }
+    public void writeEmployeesToCsvCustom(PrintWriter writer, List<String> headerList) {
+        CSVHelper.writeEmployeesToCsvCustom(writer,userRepository.findAll(),headerList);
     }
 
 }

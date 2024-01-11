@@ -1,10 +1,15 @@
 package com.katziio.app.service.user;
 
-import com.katziio.app.dto.Response;
+import com.katziio.app.dto.response.ResponseDTO;
+import com.katziio.app.model.User;
 
 public interface UserService {
 
-    Response createUser(String phone);
+    ResponseDTO createUser(String phone);
 
-    Response verifyOtp(String phone, String otp);
+    ResponseDTO verifyOtp(String phone, String otp);
+
+    Boolean isValidUser(Long userId);
+
+    User getAccountById(Long userId);
 }
