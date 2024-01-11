@@ -1,6 +1,6 @@
 package com.katziio.app.service.user;
 
-import com.katziio.app.dto.error.ErrorDTO;
+import com.katziio.app.dto.ErrorDTO;
 import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.model.Otp;
 import com.katziio.app.model.User;
@@ -126,11 +126,11 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    public void writeEmployeesToCsv(PrintWriter writer) {
-        CSVHelper.writeEmployeesToCsv(writer,userRepository.findAll());
+    public void writeUserToCsv(PrintWriter writer) {
+        CSVHelper.writeUserToCsv(writer,userRepository.findAll());
     }
-    public void writeEmployeesToCsvCustom(PrintWriter writer, List<String> headerList) {
-        CSVHelper.writeEmployeesToCsvCustom(writer,userRepository.findAll(),headerList);
+    public void writeUserToCsvCustom(PrintWriter writer) {
+        CSVHelper.writeUserToCsv(writer,userRepository.findAll());
     }
 
 }

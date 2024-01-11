@@ -1,7 +1,7 @@
 package com.katziio.app.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.katziio.app.dto.error.ErrorDTO;
+import com.katziio.app.dto.ErrorDTO;
 import com.katziio.app.util.enums.ErrorEnum;
 import lombok.*;
 
