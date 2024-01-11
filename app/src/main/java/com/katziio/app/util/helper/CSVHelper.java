@@ -2,6 +2,8 @@ package com.katziio.app.util.helper;
 import com.katziio.app.model.Account;
 import com.katziio.app.model.Expense;
 import com.katziio.app.model.User;
+import com.katziio.app.service.account.AccountService;
+import com.katziio.app.service.account.AccountServiceImpl;
 import com.katziio.app.service.user.UserService;
 import com.katziio.app.service.user.UserServiceImpl;
 import com.katziio.app.util.CustomUtil;
@@ -20,10 +22,12 @@ import java.util.List;
 public class CSVHelper {
 
     private static UserService userService = null;
+    private static AccountService accountService = null;
 
     @Autowired
     public CSVHelper(){
         userService = new UserServiceImpl();
+        accountService = new AccountServiceImpl();
     }
 
     private static final String TYPE = "text/csv";
@@ -186,12 +190,21 @@ public class CSVHelper {
 
 
             for (CSVRecord csvRecord : csvRecords) {
-                if(!CustomUtil.isValidObject(csvRecord.get(ACCOUNT_HEADER[0])!=null) &&!userService.isValidUser(Long.parseLong(csvRecord.get(ACCOUNT_HEADER[0])))){
+                if(!CustomUtil.isValidObject(csvRecord.get(EXPENSE_HEADER[7])!=null) &&!accountService.isValidUser(Long.parseLong(csvRecord.get(EXPENSE_HEADER[7])))){
                     throw new RuntimeException();
                 }
-                User user = userService.getAccountById(Long.parseLong(csvRecord.get(ACCOUNT_HEADER[0])));
-
-                Expense expense = new Expense();
+                Account account = accountService.findAccountById(csvRecord.get(EXPENSE_HEADER[7]));
+//                pending .........
+                Expense expense = new Expense(
+                        csvRecord.get(EXPENSE_HEADER[0]),
+                        csvRecord.get(EXPENSE_HEADER[1]),
+                        csvRecord.get(EXPENSE_HEADER[2]),
+                        csvRecord.get(EXPENSE_HEADER[3]),
+                        csvRecord.get(EXPENSE_HEADER[4]),
+                        csvRecord.get(EXPENSE_HEADER[5]),
+                        csvRecord.get(EXPENSE_HEADER[6]),
+                        csvRecord.get(EXPENSE_HEADER[7])
+                );
                 expenseList.add(expense);
             }
             return expenseList;
