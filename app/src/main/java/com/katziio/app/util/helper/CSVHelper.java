@@ -190,10 +190,10 @@ public class CSVHelper {
 
 
             for (CSVRecord csvRecord : csvRecords) {
-                if(!CustomUtil.isValidObject(csvRecord.get(EXPENSE_HEADER[7])!=null) &&!accountService.isValidUser(Long.parseLong(csvRecord.get(EXPENSE_HEADER[7])))){
+                if(!CustomUtil.isValidObject(csvRecord.get(EXPENSE_HEADER[7])!=null) && !userService.isValidUser(Long.parseLong(csvRecord.get(EXPENSE_HEADER[7])))){
                     throw new RuntimeException();
                 }
-                Account account = accountService.findAccountById(csvRecord.get(EXPENSE_HEADER[7]));
+                Account account = accountService.getAccountById(Long.valueOf(csvRecord.get(EXPENSE_HEADER[7])));
 //                pending .........
                 Expense expense = new Expense(
                         csvRecord.get(EXPENSE_HEADER[0]),

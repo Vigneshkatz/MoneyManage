@@ -45,4 +45,7 @@ public class Expense {
         this.account = expense.getAccount();
         this.initialBalance = expense.getInitialBalance();
     }
+
+    public Expense(String s, String s1, String s2, String s3, String s4, String s5, String s6, String s7) {
+    }
 }
