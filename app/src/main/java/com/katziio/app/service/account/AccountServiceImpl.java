@@ -1,150 +1,47 @@
 package com.katziio.app.service.account;
 
-import com.katziio.app.dto.request.AccountDTO;
-import com.katziio.app.dto.error.ErrorDTO;
-import com.katziio.app.dto.request.RequestDTO;
-import com.katziio.app.dto.response.ResponseDTO;
-import com.katziio.app.exception.*;
+import com.katziio.app.dto.AccountDTO;
+import com.katziio.app.dto.ErrorDTO;
+import com.katziio.app.dto.Request;
+import com.katziio.app.dto.Response;
+import com.katziio.app.exception.ErrorOnSavingInTable;
+import com.katziio.app.exception.InvalidDTOException;
 import com.katziio.app.model.Account;
 import com.katziio.app.repository.account.AccountRepository;
-import com.katziio.app.util.CustomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
 
-    public ResponseDTO createAccount(RequestDTO request) throws Exception {
-        ResponseDTO response = new ResponseDTO();
+    public Response create(Request request) throws Exception {
         ErrorDTO errorDTO = new ErrorDTO();
         if (request != null) {
             if (request.getIsAccountDto()) {
                 List<String> isError = isValidAccountDTO(request.getAccountDTO());
                 if (isError.isEmpty()) {
                     try {
-                        Account account =this.accountRepository.save( new Account(request.getAccountDTO()));
-                        response.setErrorDTO(errorDTO);
-                        response.setContent(account);
-                        return response;
+                        Account account = new Account(request.getAccountDTO());
+                        this.accountRepository.save(account);
                     } catch (Exception e) {
                         throw new ErrorOnSavingInTable("on Account Repo" + e.getMessage());
                     }
                 } else {
-                    errorDTO.setIsEmptyField(true);
                     errorDTO.setEmptyField(isError);
                 }
 
             } else {
                 throw new InvalidDTOException("Request dto does not have Account DTO");
             }
+
         } else {
             throw new NullPointerException("Request is null");
         }
         return null;
-    }
-
-    @Override
-    public ResponseDTO updateAccount(RequestDTO request) {
-        ResponseDTO response = new ResponseDTO();
-        ErrorDTO errorDTO = new ErrorDTO();
-       if(request!=null)
-       {
-           if (request.getIsAccountDto()){
-               List<String> isError = isValidAccountDTO(request.getAccountDTO());
-               if (isError.isEmpty()) {
-                   try {
-                       Long accountId = request.getAccountDTO().getId();
-                       if(accountId!=null)
-                       {
-                           Optional<Account> optionalAccount = this.accountRepository.findById(accountId);
-                           if(optionalAccount.isPresent()) {
-                               try {
-                                   Account account = new Account(request.getAccountDTO());
-                                   this.accountRepository.save(account);
-                               }catch (Exception e)
-                               {
-                                   throw new ErrorOnSavingInTable("on Account Update" + e.getMessage());
-                               }
-
-                           }else {
-                               throw new NullPointerException("optional is null");
-                           }
-                       }else {
-                           throw new DataAlreadyExists("Account already exists");
-                       }
-                   } catch (Exception e) {
-                       try {
-                           throw new ErrorOnSavingInTable("on Account Repo" + e.getMessage());
-                       } catch (ErrorOnSavingInTable ex) {
-                           throw new RuntimeException(ex);
-                       }
-                   }
-               } else {
-                   errorDTO.setEmptyField(isError);
-               }
-           } else {
-               try {
-                   throw new InvalidDTOException("Request dto does not have Account DTO");
-               } catch (InvalidDTOException e) {
-                   throw new RuntimeException(e);
-               }
-           }
-       } else {
-           throw new NullPointerException("Request is null");
-       }
-        return null;
-    }
-
-    @Override
-    public ResponseDTO deleteAccount(Long id) {
-        if(id<=0)
-        {
-            try {
-                throw new InvalidIDException("enter a valid id");
-            } catch (InvalidIDException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        Optional<Account> optionalAccount = this.accountRepository.findById(id);
-        if(optionalAccount.isEmpty())
-        {
-            try {
-                throw new DataNotFoundException("No data fount for this id");
-            } catch (DataNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        }else {
-            try {
-                this.accountRepository.delete(optionalAccount.get());
-            }catch (Exception e)
-            {
-                throw new RuntimeException("Error on deleting account"+e.getMessage());
-            }
-        }
-        return null;
-
-    }
-
-    @Override
-    public Boolean isValidAccount(Long accountId) {
-        if(!CustomUtil.isValidObject(accountId)){
-            return false;
-        }
-        return this.accountRepository.existsById(accountId);
-    }
-
-    @Override
-    public Account getAccountById(Long accountId) {
-        if(!CustomUtil.isValidObject(accountId)){
-            return null;
-        }
-        Optional<Account> optionalAccount =  this.accountRepository.findById(accountId);
-        return optionalAccount.orElse(null);
     }
 
     public List<String> isValidAccountDTO(AccountDTO accountDTO) {

@@ -1,4 +1,4 @@
-package com.katziio.app.dto.error;
+package com.katziio.app.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -15,6 +15,4 @@ public class ErrorDTO {
     private String errorMessage;
     @JsonProperty("empty_field")
     private List<String> emptyField;
-    @JsonProperty("isEmptyFields")
-    private Boolean isEmptyField;
 }
