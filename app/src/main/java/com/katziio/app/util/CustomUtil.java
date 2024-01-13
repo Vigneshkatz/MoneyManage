@@ -1,5 +1,9 @@
 package com.katziio.app.util;
 
+import com.katziio.app.util.enums.ExpenseCategory;
+
+import java.util.Locale;
+
 public class CustomUtil {
     public static boolean isValidString(String input) {
         return input != null && !input.isBlank();
@@ -15,6 +19,30 @@ public class CustomUtil {
             return !str.isBlank();
         } else {
             return true;
+        }
+    }
+    public static ExpenseCategory getCategory(String input) {
+        switch (input.toUpperCase()) {
+            case "HEALTHWELLNESS":
+                return ExpenseCategory.HEALTH_WELLNESS;
+            case "HOBBIES":
+                return ExpenseCategory.HOBBIES;
+            case "TRAVEL":
+                return ExpenseCategory.TRAVEL;
+            case "HOMEMAINTENANCE":
+                return ExpenseCategory.HOME_MAINTENANCE;
+            case "EDUCATION":
+                return ExpenseCategory.EDUCATION;
+            case "TECHNOLOGY":
+                return ExpenseCategory.TECHNOLOGY;
+            case "FOODDINING":
+                return ExpenseCategory.FOOD_DINING;
+            case "CLOTHINGACCESSORIES":
+                return ExpenseCategory.CLOTHING_ACCESSORIES;
+            case "GIFTSCELEBRATIONS":
+                return ExpenseCategory.GIFTS_CELEBRATIONS;
+            default:
+                return ExpenseCategory.ENTERTAINMENT;
         }
     }
 }

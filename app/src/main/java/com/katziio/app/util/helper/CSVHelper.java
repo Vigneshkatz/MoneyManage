@@ -1,4 +1,5 @@
 package com.katziio.app.util.helper;
+
 import com.katziio.app.model.Account;
 import com.katziio.app.model.Expense;
 import com.katziio.app.model.User;
@@ -16,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 
 public class CSVHelper {
@@ -25,15 +25,15 @@ public class CSVHelper {
     private static AccountService accountService = null;
 
     @Autowired
-    public CSVHelper(){
+    public CSVHelper() {
         userService = new UserServiceImpl();
         accountService = new AccountServiceImpl();
     }
 
     private static final String TYPE = "text/csv";
-    private static final String[] ACCOUNT_HEADER = { "user_Id","accountNumber", "currentBalance", "cardNumber",  "cvv", "bankName", "ifsc", "phoneLinked","isNetBanking","isActive","createdAt","accountType","accountMonthlySpendLimit","monthlySpent"};
-    private static final String[] EXPENSE_HEADER = {"id","time","amountSpent","initialBalance","updatedBalance","category","spentOn","account_id"};
-    private static final String[] USER_HEADERS = {"id", "name", "email", "password", "place", "phone","isPremium","isVerified"};
+    private static final String[] ACCOUNT_HEADER = {"user_Id", "accountNumber", "currentBalance", "cardNumber", "cvv", "bankName", "ifsc", "phoneLinked", "isNetBanking", "isActive", "createdAt", "accountType", "accountMonthlySpendLimit", "monthlySpent"};
+    private static final String[] EXPENSE_HEADER = {"id", "time", "amountSpent", "initialBalance", "updatedBalance", "category", "spentOn", "account_id"};
+    private static final String[] USER_HEADERS = {"id", "name", "email", "password", "place", "phone", "isPremium", "isVerified"};
 
     public static boolean hasCSVFormat(MultipartFile file) {
 
@@ -74,9 +74,9 @@ public class CSVHelper {
 
     public static void writeUserToCsv(Writer writer, List<User> userList) {
         try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)) {
-            csvPrinter.printRecord("userId", "name", "email", "password", "phone","accountList","isPremium","isVerified");
+            csvPrinter.printRecord("userId", "name", "email", "password", "phone", "accountList", "isPremium", "isVerified");
             for (User user : userList) {
-                csvPrinter.printRecord(user.getId(), user.getUserName(), user.getEmail(), user.getPassword(),user.getPhone(),
+                csvPrinter.printRecord(user.getId(), user.getUserName(), user.getEmail(), user.getPassword(), user.getPhone(),
                         user.getAccountList(), user.getIsPremium(), user.getIsVerified(), user.getRoleList());
             }
         } catch (IOException e) {
@@ -106,10 +106,10 @@ public class CSVHelper {
                             userData.add(user.getPhone());
                             break;
                         case "isverified":
-                            userData.add(user.getIsVerified()!=null?user.getIsVerified().toString():null);
+                            userData.add(user.getIsVerified() != null ? user.getIsVerified().toString() : null);
                             break;
                         case "ispremium":
-                            userData.add(user.getIsPremium()!=null?user.getIsPremium().toString():null);
+                            userData.add(user.getIsPremium() != null ? user.getIsPremium().toString() : null);
                             break;
                         case "accountlist":
                             userData.add(user.getAccountList().toString());
@@ -127,7 +127,7 @@ public class CSVHelper {
         }
     }
 
-    public static List<Account> csvToAccount(InputStream is)  {
+    public static List<Account> csvToAccount(InputStream is) {
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
              CSVParser csvParser = new CSVParser(fileReader,
                      CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
@@ -138,12 +138,12 @@ public class CSVHelper {
 
 
             for (CSVRecord csvRecord : csvRecords) {
-                if(!CustomUtil.isValidObject(csvRecord.get(ACCOUNT_HEADER[0])!=null) &&!userService.isValidUser(Long.parseLong(csvRecord.get(ACCOUNT_HEADER[0])))){
+                if (!CustomUtil.isValidObject(csvRecord.get(ACCOUNT_HEADER[0]) != null) && !userService.isValidUser(Long.parseLong(csvRecord.get(ACCOUNT_HEADER[0])))) {
                     throw new RuntimeException();
                 }
                 User user = userService.getAccountById(Long.parseLong(csvRecord.get(ACCOUNT_HEADER[0])));
 
-                        Account account = new Account(
+                Account account = new Account(
                         user,
                         csvRecord.get(ACCOUNT_HEADER[1]),
                         csvRecord.get(ACCOUNT_HEADER[2]),
@@ -169,17 +169,17 @@ public class CSVHelper {
 
     public static void writeAccountToCsv(Writer writer, List<Account> accounList) {
         try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)) {
-            csvPrinter.printRecord( "account_id","user_Id","accountNumber", "currentBalance", "cardNumber",  "cvv", "bankName", "ifsc", "phoneLinked","isNetBanking","isActive","createdAt","accountType","accountMonthlySpendLimit","monthlySpent");
+            csvPrinter.printRecord("account_id", "user_Id", "accountNumber", "currentBalance", "cardNumber", "cvv", "bankName", "ifsc", "phoneLinked", "isNetBanking", "isActive", "createdAt", "accountType", "accountMonthlySpendLimit", "monthlySpent");
             for (Account account : accounList) {
-                csvPrinter.printRecord(account.getId(),account.getUser().getId(), account.getAccountNumber(), account.getCurrentBalance(), account.getCardNumber(),account.getCvv(),
-                        account.getBankName(), account.getIfsc(), account.getPhoneLinked(), account.getIsNetBanking(),account.getIsActive(),account.getCreatedAt(),account.getAccountType(),account.getAccountMonthlySpendLimit(),account.getMonthlySpent());
+                csvPrinter.printRecord(account.getId(), account.getUser().getId(), account.getAccountNumber(), account.getCurrentBalance(), account.getCardNumber(), account.getCvv(),
+                        account.getBankName(), account.getIfsc(), account.getPhoneLinked(), account.getIsNetBanking(), account.getIsActive(), account.getCreatedAt(), account.getAccountType(), account.getAccountMonthlySpendLimit(), account.getMonthlySpent());
             }
         } catch (IOException e) {
             throw new RuntimeException("Error While writing CSV ", e);
         }
     }
 
-    public static List<Expense> csvToExpense(InputStream is)  {
+    public static List<Expense> csvToExpense(InputStream is) {
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
              CSVParser csvParser = new CSVParser(fileReader,
                      CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
@@ -188,22 +188,18 @@ public class CSVHelper {
 
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
-
             for (CSVRecord csvRecord : csvRecords) {
-                if(!CustomUtil.isValidObject(csvRecord.get(EXPENSE_HEADER[7])!=null) && !userService.isValidUser(Long.parseLong(csvRecord.get(EXPENSE_HEADER[7])))){
+                if (!CustomUtil.isValidObject(csvRecord.get(EXPENSE_HEADER[7]) != null) && !accountService.isValidAccount(Long.parseLong(csvRecord.get(EXPENSE_HEADER[7])))) {
                     throw new RuntimeException();
                 }
                 Account account = accountService.getAccountById(Long.valueOf(csvRecord.get(EXPENSE_HEADER[7])));
-//                pending .........
                 Expense expense = new Expense(
-                        csvRecord.get(EXPENSE_HEADER[0]),
                         csvRecord.get(EXPENSE_HEADER[1]),
-                        csvRecord.get(EXPENSE_HEADER[2]),
-                        csvRecord.get(EXPENSE_HEADER[3]),
-                        csvRecord.get(EXPENSE_HEADER[4]),
-                        csvRecord.get(EXPENSE_HEADER[5]),
-                        csvRecord.get(EXPENSE_HEADER[6]),
-                        csvRecord.get(EXPENSE_HEADER[7])
+                        Long.parseLong(csvRecord.get(EXPENSE_HEADER[2])),
+                        CustomUtil.getCategory(csvRecord.get(EXPENSE_HEADER[3])),
+                        Long.parseLong(csvRecord.get(EXPENSE_HEADER[4])),
+                        account,
+                        Long.parseLong(csvRecord.get(EXPENSE_HEADER[6]))
                 );
                 expenseList.add(expense);
             }
@@ -215,17 +211,13 @@ public class CSVHelper {
 
     public static void writeExpenseToCsv(Writer writer, List<Expense> expenseList) {
         try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)) {
-            csvPrinter.printRecord( "id","time","amountSpent","initialBalance","updatedBalance","category","spentOn","account_id");
+            csvPrinter.printRecord("id", "time", "amountSpent", "initialBalance", "updatedBalance", "category", "spentOn", "account_id");
             for (Expense expense : expenseList) {
-                csvPrinter.printRecord(expense.getId(),expense.getTime(),expense.getAmountSpent(),expense.getUpdatedBalance(),expense.getCategory(),
-                        expense.getSpentOn(),expense.getAccount().getId());}
+                csvPrinter.printRecord(expense.getId(), expense.getTime(), expense.getAmountSpent(), expense.getUpdatedBalance(), expense.getCategory(),
+                        expense.getSpentOn(), expense.getAccount().getId());
+            }
         } catch (IOException e) {
             throw new RuntimeException("Error While writing CSV ", e);
         }
     }
-
-
-
-
-
 }

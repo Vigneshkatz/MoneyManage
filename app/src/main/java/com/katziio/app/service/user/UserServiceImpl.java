@@ -1,6 +1,6 @@
 package com.katziio.app.service.user;
 
-import com.katziio.app.dto.ErrorDTO;
+import com.katziio.app.dto.error.ErrorDTO;
 import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.model.Otp;
 import com.katziio.app.model.User;
