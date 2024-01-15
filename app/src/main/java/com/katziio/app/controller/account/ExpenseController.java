@@ -16,8 +16,7 @@ public class ExpenseController {
     private  ExpenseService expenseService;
 
     @PostMapping("/{user-id}/{account-id}/create")
-    public ResponseDTO createExpense(@PathVariable Long userId, @PathVariable Long accountId,@RequestBody ExpenseRequestDTO expenseDto)
-    {
+    public ResponseDTO createExpense(@PathVariable Long userId, @PathVariable Long accountId,@RequestBody ExpenseRequestDTO expenseDto) {
         try {
             return this.expenseService.createExpense(userId,accountId,expenseDto);
         } catch (ErrorOnSavingInTable e) {
@@ -26,8 +25,7 @@ public class ExpenseController {
     }
 
     @PutMapping("/{user-id}/{account-id}/update")
-    public ResponseDTO updateExpense(@PathVariable Long userId, @PathVariable Long accountId, @RequestBody ExpenseRequestDTO expenseDto)
-    {
+    public ResponseDTO updateExpense(@PathVariable Long userId, @PathVariable Long accountId, @RequestBody ExpenseRequestDTO expenseDto) {
         try {
             return this.expenseService.updateExpense(userId,accountId,expenseDto);
         } catch (ErrorOnSavingInTable e) {
@@ -35,9 +33,15 @@ public class ExpenseController {
         }
     }
 
-    @DeleteMapping("/{user-id}/{account-id}")
-    public ResponseDTO deleteExpense(@PathVariable Long userId, @PathVariable Long accountId,@RequestBody ExpenseRequestDTO expenseDto)
-    {
+    @DeleteMapping("/{user-id}/{account-id}/delete")
+    public ResponseDTO deleteExpense(@PathVariable Long userId, @PathVariable Long accountId,@RequestBody ExpenseRequestDTO expenseDto) {
         return this.expenseService.deleteExpense(userId,accountId,expenseDto);
     }
+
+    @GetMapping("{user-id}/{account-id}/{expenseId}/getExpense")
+    public ResponseDTO getExpense(@PathVariable Long userId, @PathVariable Long accountId,@PathVariable Long expenseId)
+    {
+        return this.expenseService.getExpenseById(userId,accountId,expenseId);
+    }
 }
+

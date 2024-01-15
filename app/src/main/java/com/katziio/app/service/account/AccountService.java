@@ -18,4 +18,5 @@ public interface AccountService {
 
     Account getAccountById(Long accountId);
 
+    ResponseDTO getAccountSummary(Long accountId);
 }

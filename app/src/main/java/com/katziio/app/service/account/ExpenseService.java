@@ -13,4 +13,5 @@ public interface ExpenseService {
 
     ResponseDTO deleteExpense(Long userId, Long accountId, ExpenseRequestDTO expenseRequest);
 
+    ResponseDTO getExpenseById(Long userId, Long accountId, Long expenseId);
 }

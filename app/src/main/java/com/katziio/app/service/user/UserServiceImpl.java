@@ -53,6 +53,8 @@ public class UserServiceImpl  implements UserService{
         } else {
             User user = new User();
             user.setPhone(phone);
+            user.setIsPremium(false);
+            user.setUserName("Guest User");
             user.setEmail("vignesh000129@gmail.com");
             user.setRoleList(Arrays.asList(Role.AUTHOR,Role.NOT_REGISTERED));
             user.setAccountList(new ArrayList<>());
@@ -82,7 +84,53 @@ public class UserServiceImpl  implements UserService{
     }
 
     public ResponseDTO verifyOtp(String phone, String otp) {
-        return null;
+        ResponseDTO response = new ResponseDTO();
+        ErrorDTO errorDTO = new ErrorDTO();
+        if (phone.isBlank()) {
+            errorDTO.setErrorCode(1);
+            errorDTO.setErrorMessage("number should not be null");
+            response.setErrorDTO(errorDTO);
+            return response;
+        }
+
+        if (phone.length() != 10) {
+            errorDTO.setErrorCode(1);
+            errorDTO.setErrorMessage("Enter a valid number");
+            response.setErrorDTO(errorDTO);
+            return response;
+        }
+       Optional<User> userOptional = this.userRepository.findByPhone(phone);
+        if(userOptional.isPresent()) {
+            User notVerifiedUser = userOptional.get();
+            Otp otp1 = this.otpRepository.findByUserId(notVerifiedUser.getId());
+            if(otp1!=null)
+            {
+                if(otp1.getOtp_generated().matches(otp)){
+                    notVerifiedUser.setIsVerified(true);
+                    this.userRepository.save(notVerifiedUser);
+                    response.setContent(notVerifiedUser);
+                    errorDTO.setErrorMessage("Success");
+                    response.setErrorDTO(errorDTO);
+                    return response;
+                }else {
+                    errorDTO.setErrorCode(1);
+                    errorDTO.setErrorMessage("Otp is wrong");
+                    response.setErrorDTO(errorDTO);
+                    return response;
+                }
+            }else {
+                errorDTO.setErrorCode(1);
+                errorDTO.setErrorMessage("Otp not created");
+                response.setErrorDTO(errorDTO);
+                return response;
+            }
+        }else {
+            errorDTO.setErrorCode(1);
+            errorDTO.setErrorMessage("User not found");
+            response.setErrorDTO(errorDTO);
+            return response;
+        }
+
     }
 
 //    @Override
@@ -94,7 +142,7 @@ public class UserServiceImpl  implements UserService{
     }
 
 //    @Override
-    public User getAccountById(Long userId) {
+    public User getUserById(Long userId) {
         if (!CustomUtil.isValidObject(userId)) {
             return null;
         }

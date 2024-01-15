@@ -17,4 +17,5 @@ public class ErrorDTO {
     private List<String> emptyField;
     @JsonProperty("isEmptyFields")
     private Boolean isEmptyField;
+    private Boolean isError;
 }

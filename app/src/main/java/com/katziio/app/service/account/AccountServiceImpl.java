@@ -6,6 +6,7 @@ import com.katziio.app.dto.request.RequestDTO;
 import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.exception.*;
 import com.katziio.app.model.Account;
+import com.katziio.app.model.Expense;
 import com.katziio.app.repository.account.AccountRepository;
 import com.katziio.app.util.CustomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,6 +148,23 @@ public class AccountServiceImpl implements AccountService {
         }
         Optional<Account> optionalAccount =  this.accountRepository.findById(accountId);
         return optionalAccount.orElse(null);
+    }
+
+    @Override
+    public ResponseDTO getAccountSummary(Long accountId) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        ErrorDTO errorDTO = new ErrorDTO();
+        Account account = this.getAccountById(accountId);
+        if(account!=null) {
+//            improvement pending
+            responseDTO.setContent(account);
+        }else {
+            errorDTO.setIsError(true);
+            errorDTO.setErrorCode(1);
+            errorDTO.setErrorMessage("account not found");
+        }
+        responseDTO.setErrorDTO(errorDTO);
+        return responseDTO;
     }
 
     public List<String> isValidAccountDTO(AccountRequestDTO accountDTO) {

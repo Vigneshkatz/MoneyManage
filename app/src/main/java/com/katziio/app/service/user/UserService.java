@@ -12,5 +12,5 @@ public interface UserService {
 
     Boolean isValidUser(Long userId);
 
-    User getAccountById(Long userId);
+    User getUserById(Long userId);
 }

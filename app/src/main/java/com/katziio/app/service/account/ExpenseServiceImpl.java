@@ -4,6 +4,7 @@ import com.katziio.app.dto.error.ErrorDTO;
 import com.katziio.app.dto.request.ExpenseRequestDTO;
 import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.exception.ErrorOnSavingInTable;
+import com.katziio.app.model.Account;
 import com.katziio.app.model.Expense;
 import com.katziio.app.repository.account.ExpenseRepository;
 import com.katziio.app.service.user.UserService;
@@ -164,6 +165,33 @@ public class ExpenseServiceImpl implements ExpenseService{
             responseDTO.setErrorDTO(errorDTO);
             return responseDTO;
         }
+    }
+
+    @Override
+    public ResponseDTO getExpenseById(Long userId, Long accountId, Long expenseId) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        ErrorDTO errorDTO = new ErrorDTO();
+       if(!this.userService.isValidUser(userId)|| !this.accountService.isValidAccount(accountId)){
+           errorDTO.setIsError(true);
+           errorDTO.setErrorMessage("Something is not found");
+       }
+       Expense expense = this.getExpenseById(expenseId);
+       if(!(expense!=null)) {
+           errorDTO.setIsError(true);
+           errorDTO.setErrorMessage("Expense not found");
+       }
+       responseDTO.setContent(expense);
+       responseDTO.setErrorDTO(errorDTO);
+       return responseDTO;
+
+    }
+
+    private Expense getExpenseById(Long expenseId) {
+        if(!CustomUtil.isValidObject(expenseId)){
+            return null;
+        }
+        Optional<Expense> optionalExpense =  this.expenseRepository.findById(expenseId);
+        return optionalExpense.orElse(null);
     }
 
 }
