@@ -141,7 +141,7 @@ public class CSVHelper {
                 if (!CustomUtil.isValidObject(csvRecord.get(ACCOUNT_HEADER[0]) != null) && !userService.isValidUser(Long.parseLong(csvRecord.get(ACCOUNT_HEADER[0])))) {
                     throw new RuntimeException();
                 }
-                User user = userService.getAccountById(Long.parseLong(csvRecord.get(ACCOUNT_HEADER[0])));
+                User user = userService.getUserById(Long.parseLong(csvRecord.get(ACCOUNT_HEADER[0])));
 
                 Account account = new Account(
                         user,
