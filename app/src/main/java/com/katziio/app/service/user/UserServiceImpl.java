@@ -1,6 +1,7 @@
 package com.katziio.app.service.user;
 
 import com.katziio.app.dto.error.ErrorDTO;
+import com.katziio.app.dto.request.UserRequestDTO;
 import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.model.Otp;
 import com.katziio.app.model.User;
@@ -17,61 +18,79 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.PrintWriter;
 import java.util.*;
+
 @Service
-public class UserServiceImpl  implements UserService{
+public class UserServiceImpl implements UserService {
     @Autowired
-    private UserRepository userRepository; 
+    private UserRepository userRepository;
     @Autowired
     private EmailSenderService emailSenderService;
     @Autowired
     private OtpRepository otpRepository;
 
-    public ResponseDTO createUser(String phone) {
+    @Override
+    public ResponseDTO createUser(UserRequestDTO userRequestDTO) {
         ResponseDTO response = new ResponseDTO();
         ErrorDTO errorDTO = new ErrorDTO();
-//        UserDTO userDTO = new UserDTO();
-        if (phone.isBlank()) {
+        if (!CustomUtil.isValidObject(userRequestDTO)) {
+            errorDTO.setErrorCode(1);
+            errorDTO.setErrorMessage("request is null");
+            response.setErrorDTO(errorDTO);
+            return response;
+        }
+        if (userRequestDTO.getPhone().isBlank()) {
             errorDTO.setErrorCode(1);
             errorDTO.setErrorMessage("number should not be null");
+            response.setErrorDTO(errorDTO);
+            return response;
         }
 
-        if (phone.length() != 10) {
+        if (userRequestDTO.getPhone().length() != 10) {
             errorDTO.setErrorCode(1);
             errorDTO.setErrorMessage("Enter a valid number");
+            response.setErrorDTO(errorDTO);
+            return response;
         }
 
-       Optional<User> userOptional = Optional.empty();
+        Optional<User> userOptional = Optional.empty();
         try {
-            userOptional = userRepository.findByPhone(phone);
+            userOptional = userRepository.findByPhone(userRequestDTO.getPhone());
         } catch (Exception e) {
             errorDTO.setErrorCode(1);
             errorDTO.setErrorMessage("User not found");
+            response.setErrorDTO(errorDTO);
+            return response;
         }
         if (userOptional != null && userOptional.isPresent()) {
             errorDTO.setErrorCode(1);
             errorDTO.setErrorMessage("user already exists");
+            response.setErrorDTO(errorDTO);
+            return response;
         } else {
             User user = new User();
-            user.setPhone(phone);
+            user.setPhone(userRequestDTO.getPhone());
+            user.setUserName(userRequestDTO.getUserName() != null ? userRequestDTO.getUserName() : null);
             user.setIsPremium(false);
-            user.setUserName("Guest User");
-            user.setEmail("vignesh000129@gmail.com");
-            user.setRoleList(Arrays.asList(Role.AUTHOR,Role.NOT_REGISTERED));
+            user.setEmail(userRequestDTO.getEmail() != null ? userRequestDTO.getEmail() : null);
+            user.setRoleList(Arrays.asList(Role.AUTHOR, Role.NOT_REGISTERED));
             user.setAccountList(new ArrayList<>());
             user.setIsVerified(false);
             try {
                 User dbUser = userRepository.save(user);
-                String otp = UserUtil.createOTP();
-                try {
-                    createOtp(user, otp);
-                    emailSenderService.initiateEmail(user.getEmail(), otp);
-                    response.setContent(dbUser);
-                    errorDTO.setErrorCode(0);
-                    errorDTO.setErrorMessage("New User created Successfully");
-                    return response;
-                } catch (Exception e) {
-                    errorDTO.setErrorCode(1);
-                    errorDTO.setErrorMessage(e.getMessage());
+                if (userRequestDTO.getEmail() != null) {
+                    String otp = UserUtil.createOTP();
+
+                    try {
+                        createOtp(user, otp);
+                        emailSenderService.initiateEmail(user.getEmail(), otp);
+                        response.setContent(dbUser);
+                        errorDTO.setErrorCode(0);
+                        errorDTO.setErrorMessage("New User created Successfully");
+                        return response;
+                    } catch (Exception e) {
+                        errorDTO.setErrorCode(1);
+                        errorDTO.setErrorMessage(e.getMessage());
+                    }
                 }
             } catch (Exception e) {
                 errorDTO.setErrorCode(2);
@@ -83,6 +102,7 @@ public class UserServiceImpl  implements UserService{
         return response;
     }
 
+    @Override
     public ResponseDTO verifyOtp(String phone, String otp) {
         ResponseDTO response = new ResponseDTO();
         ErrorDTO errorDTO = new ErrorDTO();
@@ -99,32 +119,38 @@ public class UserServiceImpl  implements UserService{
             response.setErrorDTO(errorDTO);
             return response;
         }
-       Optional<User> userOptional = this.userRepository.findByPhone(phone);
-        if(userOptional.isPresent()) {
+        Optional<User> userOptional = this.userRepository.findByPhone(phone);
+        if (userOptional.isPresent()) {
             User notVerifiedUser = userOptional.get();
             Otp otp1 = this.otpRepository.findByUserId(notVerifiedUser.getId());
-            if(otp1!=null)
-            {
-                if(otp1.getOtp_generated().matches(otp)){
-                    notVerifiedUser.setIsVerified(true);
-                    this.userRepository.save(notVerifiedUser);
-                    response.setContent(notVerifiedUser);
-                    errorDTO.setErrorMessage("Success");
-                    response.setErrorDTO(errorDTO);
-                    return response;
-                }else {
+            if (otp1 != null) {
+                if (otp1.getOtp_generated().matches(otp)) {
+                    try {
+                        notVerifiedUser.setIsVerified(true);
+                        this.userRepository.save(notVerifiedUser);
+                        response.setContent(notVerifiedUser);
+                        errorDTO.setErrorMessage("Success");
+                        response.setErrorDTO(errorDTO);
+                        return response;
+                    } catch (Exception e) {
+                        errorDTO.setErrorCode(1);
+                        errorDTO.setErrorMessage("Something went wrong internal error");
+                        response.setErrorDTO(errorDTO);
+                        return response;
+                    }
+                } else {
                     errorDTO.setErrorCode(1);
                     errorDTO.setErrorMessage("Otp is wrong");
                     response.setErrorDTO(errorDTO);
                     return response;
                 }
-            }else {
+            } else {
                 errorDTO.setErrorCode(1);
                 errorDTO.setErrorMessage("Otp not created");
                 response.setErrorDTO(errorDTO);
                 return response;
             }
-        }else {
+        } else {
             errorDTO.setErrorCode(1);
             errorDTO.setErrorMessage("User not found");
             response.setErrorDTO(errorDTO);
@@ -133,7 +159,7 @@ public class UserServiceImpl  implements UserService{
 
     }
 
-//    @Override
+    @Override
     public Boolean isValidUser(Long userId) {
         if (!CustomUtil.isValidObject(userId)) {
             return false;
@@ -141,7 +167,7 @@ public class UserServiceImpl  implements UserService{
         return this.userRepository.existsById(userId);
     }
 
-//    @Override
+    @Override
     public User getUserById(Long userId) {
         if (!CustomUtil.isValidObject(userId)) {
             return null;
