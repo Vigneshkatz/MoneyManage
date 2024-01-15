@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountDTO {
+public class AccountRequestDTO {
     private Long id;
     private User user;
     private Long accountNumber;

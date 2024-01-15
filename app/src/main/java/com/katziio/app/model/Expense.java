@@ -1,6 +1,6 @@
 package com.katziio.app.model;
 
-import com.katziio.app.dto.request.ExpenseDTO;
+import com.katziio.app.dto.request.ExpenseRequestDTO;
 import com.katziio.app.util.enums.ExpenseCategory;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -26,7 +26,7 @@ public class Expense {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    public Expense(ExpenseDTO expenseDTO) {
+    public Expense(ExpenseRequestDTO expenseDTO) {
        this.id = expenseDTO.getId() != null? expenseDTO.getId() : null;
        this.amountSpent = expenseDTO.getAmountSpent();
        this.category = expenseDTO.getCategory();

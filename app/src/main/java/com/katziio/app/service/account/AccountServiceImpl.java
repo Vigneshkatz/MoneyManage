@@ -1,7 +1,7 @@
 package com.katziio.app.service.account;
 
-import com.katziio.app.dto.request.AccountDTO;
 import com.katziio.app.dto.error.ErrorDTO;
+import com.katziio.app.dto.request.AccountRequestDTO;
 import com.katziio.app.dto.request.RequestDTO;
 import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.exception.*;
@@ -9,11 +9,13 @@ import com.katziio.app.model.Account;
 import com.katziio.app.repository.account.AccountRepository;
 import com.katziio.app.util.CustomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class AccountServiceImpl implements AccountService {
 
     @Autowired
@@ -147,7 +149,7 @@ public class AccountServiceImpl implements AccountService {
         return optionalAccount.orElse(null);
     }
 
-    public List<String> isValidAccountDTO(AccountDTO accountDTO) {
+    public List<String> isValidAccountDTO(AccountRequestDTO accountDTO) {
         List<String> errors = new ArrayList<>();
 
         if (accountDTO.getUser() == null) {

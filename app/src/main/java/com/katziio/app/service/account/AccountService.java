@@ -4,7 +4,9 @@ import com.katziio.app.dto.request.RequestDTO;
 import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.exception.InvalidDTOException;
 import com.katziio.app.model.Account;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface AccountService {
     ResponseDTO createAccount(RequestDTO request) throws InvalidDTOException, Exception;
 

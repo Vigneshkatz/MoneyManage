@@ -21,7 +21,7 @@ import java.util.List;
 
 public class CSVHelper {
 
-    private static UserService userService = null;
+    private static UserServiceImpl userService = null;
     private static AccountService accountService = null;
 
     @Autowired

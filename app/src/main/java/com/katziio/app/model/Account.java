@@ -1,6 +1,6 @@
 package com.katziio.app.model;
 
-import com.katziio.app.dto.request.AccountDTO;
+import com.katziio.app.dto.request.AccountRequestDTO;
 import com.katziio.app.util.enums.AccountType;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -33,7 +33,7 @@ public class Account {
     private Long monthlySpent;
     @OneToMany(mappedBy = "account")
     private List<Expense> expensesList;
-    public Account(AccountDTO other) {
+    public Account(AccountRequestDTO other) {
         this.id = other.getId()==null?null:other.getId();
         this.user = other.getUser();
         this.accountNumber = other.getAccountNumber();

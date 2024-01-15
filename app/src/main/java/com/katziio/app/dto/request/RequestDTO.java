@@ -12,5 +12,5 @@ public class RequestDTO {
     @JsonIgnore
     private Boolean isAccountDto;
     @JsonIgnore
-    private AccountDTO accountDTO;
+    private AccountRequestDTO accountDTO;
 }

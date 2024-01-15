@@ -8,23 +8,24 @@ import com.katziio.app.repository.user.OtpRepository;
 import com.katziio.app.repository.user.UserRepository;
 import com.katziio.app.service.email.EmailSenderService;
 import com.katziio.app.util.CustomUtil;
+import com.katziio.app.util.enums.Role;
 import com.katziio.app.util.helper.CSVHelper;
 import com.katziio.app.util.user.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.PrintWriter;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
-
-public class UserServiceImpl implements UserService{
+import java.util.*;
+@Service
+public class UserServiceImpl  implements UserService{
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository userRepository; 
     @Autowired
     private EmailSenderService emailSenderService;
     @Autowired
     private OtpRepository otpRepository;
+
     public ResponseDTO createUser(String phone) {
         ResponseDTO response = new ResponseDTO();
         ErrorDTO errorDTO = new ErrorDTO();
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService{
             errorDTO.setErrorMessage("Enter a valid number");
         }
 
-        Optional<User> userOptional = Optional.empty();
+       Optional<User> userOptional = Optional.empty();
         try {
             userOptional = userRepository.findByPhone(phone);
         } catch (Exception e) {
@@ -47,13 +48,14 @@ public class UserServiceImpl implements UserService{
             errorDTO.setErrorMessage("User not found");
         }
         if (userOptional != null && userOptional.isPresent()) {
-
             errorDTO.setErrorCode(1);
             errorDTO.setErrorMessage("user already exists");
         } else {
             User user = new User();
             user.setPhone(phone);
             user.setEmail("vignesh000129@gmail.com");
+            user.setRoleList(Arrays.asList(Role.AUTHOR,Role.NOT_REGISTERED));
+            user.setAccountList(new ArrayList<>());
             user.setIsVerified(false);
             try {
                 User dbUser = userRepository.save(user);
@@ -83,23 +85,22 @@ public class UserServiceImpl implements UserService{
         return null;
     }
 
-    @Override
+//    @Override
     public Boolean isValidUser(Long userId) {
-        if(!CustomUtil.isValidObject(userId)) {
+        if (!CustomUtil.isValidObject(userId)) {
             return false;
         }
-       return this.userRepository.existsById(userId);
+        return this.userRepository.existsById(userId);
     }
 
-    @Override
+//    @Override
     public User getAccountById(Long userId) {
-        if(!CustomUtil.isValidObject(userId)) {
+        if (!CustomUtil.isValidObject(userId)) {
             return null;
         }
-        Optional<User> userOptional=  this.userRepository.findById(userId);
+        Optional<User> userOptional = this.userRepository.findById(userId);
         return userOptional.orElse(null);
     }
-
 
     private void createOtp(User user, String otpString) {
         Otp otp = new Otp();
@@ -113,8 +114,7 @@ public class UserServiceImpl implements UserService{
     }
 
     public List<User> readFile(MultipartFile file) {
-        if(!CSVHelper.hasCSVFormat(file))
-        {
+        if (!CSVHelper.hasCSVFormat(file)) {
             System.out.println("not the expected file");
             return null;
         }
@@ -128,10 +128,11 @@ public class UserServiceImpl implements UserService{
     }
 
     public void writeUserToCsv(PrintWriter writer) {
-        CSVHelper.writeUserToCsv(writer,userRepository.findAll());
+        CSVHelper.writeUserToCsv(writer, userRepository.findAll());
     }
+
     public void writeUserToCsvCustom(PrintWriter writer) {
-        CSVHelper.writeUserToCsv(writer,userRepository.findAll());
+        CSVHelper.writeUserToCsv(writer, userRepository.findAll());
     }
 
 }

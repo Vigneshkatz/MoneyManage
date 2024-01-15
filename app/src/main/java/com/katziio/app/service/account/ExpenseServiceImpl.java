@@ -1,7 +1,7 @@
 package com.katziio.app.service.account;
 
-import com.katziio.app.dto.error.*;
-import com.katziio.app.dto.request.ExpenseDTO;
+import com.katziio.app.dto.error.ErrorDTO;
+import com.katziio.app.dto.request.ExpenseRequestDTO;
 import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.exception.ErrorOnSavingInTable;
 import com.katziio.app.model.Expense;
@@ -9,11 +9,13 @@ import com.katziio.app.repository.account.ExpenseRepository;
 import com.katziio.app.service.user.UserService;
 import com.katziio.app.util.CustomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.Calendar;
 import java.util.Optional;
 
+@Service
 public class ExpenseServiceImpl implements ExpenseService{
     @Autowired
     private UserService userService;
@@ -24,7 +26,7 @@ public class ExpenseServiceImpl implements ExpenseService{
     @Autowired
     private ExpenseRepository expenseRepository;
     @Override
-    public ResponseDTO createExpense(Long userId, Long accountId, ExpenseDTO expenseRequest) throws ErrorOnSavingInTable {
+    public ResponseDTO createExpense(Long userId, Long accountId, ExpenseRequestDTO expenseRequest) throws ErrorOnSavingInTable {
         ResponseDTO responseDTO = new ResponseDTO();
         ErrorDTO errorDTO = new ErrorDTO();
 
@@ -57,7 +59,7 @@ public class ExpenseServiceImpl implements ExpenseService{
     }
 
     @Override
-    public ResponseDTO updateExpense(Long userId, Long accountId, ExpenseDTO expenseRequest) throws ErrorOnSavingInTable {
+    public ResponseDTO updateExpense(Long userId, Long accountId, ExpenseRequestDTO expenseRequest) throws ErrorOnSavingInTable {
         ResponseDTO responseDTO = new ResponseDTO();
         ErrorDTO errorDTO = new ErrorDTO();
 
@@ -113,7 +115,7 @@ public class ExpenseServiceImpl implements ExpenseService{
     }
 
     @Override
-    public ResponseDTO deleteExpense(Long userId, Long accountId, ExpenseDTO expenseRequest) {
+    public ResponseDTO deleteExpense(Long userId, Long accountId, ExpenseRequestDTO expenseRequest) {
         ResponseDTO responseDTO = new ResponseDTO();
         ErrorDTO errorDTO = new ErrorDTO();
 

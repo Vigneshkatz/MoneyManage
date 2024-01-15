@@ -1,6 +1,6 @@
 package com.katziio.app.controller.account;
 
-import com.katziio.app.dto.request.ExpenseDTO;
+import com.katziio.app.dto.request.ExpenseRequestDTO;
 import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.exception.ErrorOnSavingInTable;
 import com.katziio.app.service.account.AccountServiceImpl;
@@ -12,14 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/v1/expense")
 public class ExpenseController {
-    private final ExpenseService expenseService;
-
     @Autowired
-    public ExpenseController(){
-        this.expenseService = new ExpenseServiceImpl();
-    }
+    private  ExpenseService expenseService;
+
     @PostMapping("/{user-id}/{account-id}/create")
-    public ResponseDTO createExpense(@PathVariable Long userId, @PathVariable Long accountId,@RequestBody ExpenseDTO expenseDto)
+    public ResponseDTO createExpense(@PathVariable Long userId, @PathVariable Long accountId,@RequestBody ExpenseRequestDTO expenseDto)
     {
         try {
             return this.expenseService.createExpense(userId,accountId,expenseDto);
@@ -29,7 +26,7 @@ public class ExpenseController {
     }
 
     @PutMapping("/{user-id}/{account-id}/update")
-    public ResponseDTO updateExpense(@PathVariable Long userId, @PathVariable Long accountId, @RequestBody ExpenseDTO expenseDto)
+    public ResponseDTO updateExpense(@PathVariable Long userId, @PathVariable Long accountId, @RequestBody ExpenseRequestDTO expenseDto)
     {
         try {
             return this.expenseService.updateExpense(userId,accountId,expenseDto);
@@ -39,7 +36,7 @@ public class ExpenseController {
     }
 
     @DeleteMapping("/{user-id}/{account-id}")
-    public ResponseDTO deleteExpense(@PathVariable Long userId, @PathVariable Long accountId,@RequestBody ExpenseDTO expenseDto)
+    public ResponseDTO deleteExpense(@PathVariable Long userId, @PathVariable Long accountId,@RequestBody ExpenseRequestDTO expenseDto)
     {
         return this.expenseService.deleteExpense(userId,accountId,expenseDto);
     }

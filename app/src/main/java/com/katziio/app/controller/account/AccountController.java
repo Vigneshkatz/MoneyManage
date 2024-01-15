@@ -13,13 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/account")
 public class AccountController {
-
-    private final AccountService accountService;
-
     @Autowired
-    public AccountController(){
-        this.accountService = new AccountServiceImpl();
-    }
+    private  AccountService accountService;
 
     @PostMapping("/create")
     public ResponseDTO createAccount(@RequestBody RequestDTO request)

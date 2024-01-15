@@ -3,18 +3,16 @@ package com.katziio.app.controller.user;
 import com.katziio.app.dto.response.ResponseDTO;
 import com.katziio.app.service.account.AccountServiceImpl;
 import com.katziio.app.service.user.UserService;
-import com.katziio.app.service.user.UserServiceImpl;
+import com.katziio.app.service.user.
+        UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/user")
 public class UserController {
-    private final UserService userService;
     @Autowired
-    public UserController(){
-        this.userService = new UserServiceImpl();
-    }
+    private  UserService userService;
 
     @PostMapping("/login")
     public ResponseDTO createUser(@RequestBody String phone){
