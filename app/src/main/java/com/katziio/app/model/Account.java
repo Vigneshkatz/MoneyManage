@@ -46,7 +46,7 @@ public class Account {
         this.isNetBanking = other.getIsNetBanking();
         this.isActive = other.getIsActive();
         this.createdAt = other.getCreatedAt();
-        this.accountType = other.getAccountType();
+//        this.accountType = other.getAccountType();
         this.accountMonthlySpendLimit = other.getAccountMonthlySpendLimit();
         this.monthlySpent = other.getMonthlySpent();
 

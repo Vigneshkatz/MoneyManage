@@ -30,7 +30,7 @@ public class AccountServiceImpl implements AccountService {
                 List<String> isError = isValidAccountDTO(request.getAccountDTO());
                 if (isError.isEmpty()) {
                     try {
-                        Account account =this.accountRepository.save( new Account(request.getAccountDTO()));
+                        Account account = this.accountRepository.save(new Account(request.getAccountDTO()));
                         response.setErrorDTO(errorDTO);
                         response.setContent(account);
                         return response;
@@ -55,29 +55,26 @@ public class AccountServiceImpl implements AccountService {
     public ResponseDTO updateAccount(RequestDTO request) {
         ResponseDTO response = new ResponseDTO();
         ErrorDTO errorDTO = new ErrorDTO();
-        if(request!=null)
-        {
-            if (request.getIsAccountDto()){
+        if (request != null) {
+            if (request.getIsAccountDto()) {
                 List<String> isError = isValidAccountDTO(request.getAccountDTO());
                 if (isError.isEmpty()) {
                     try {
                         Long accountId = request.getAccountDTO().getId();
-                        if(accountId!=null)
-                        {
+                        if (accountId != null) {
                             Optional<Account> optionalAccount = this.accountRepository.findById(accountId);
-                            if(optionalAccount.isPresent()) {
+                            if (optionalAccount.isPresent()) {
                                 try {
                                     Account account = new Account(request.getAccountDTO());
                                     this.accountRepository.save(account);
-                                }catch (Exception e)
-                                {
+                                } catch (Exception e) {
                                     throw new ErrorOnSavingInTable("on Account Update" + e.getMessage());
                                 }
 
-                            }else {
+                            } else {
                                 throw new NullPointerException("optional is null");
                             }
-                        }else {
+                        } else {
                             throw new DataAlreadyExists("Account already exists");
                         }
                     } catch (Exception e) {
@@ -105,8 +102,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public ResponseDTO deleteAccount(Long id) {
-        if(id<=0)
-        {
+        if (id <= 0) {
             try {
                 throw new InvalidIDException("enter a valid id");
             } catch (InvalidIDException e) {
@@ -114,19 +110,17 @@ public class AccountServiceImpl implements AccountService {
             }
         }
         Optional<Account> optionalAccount = this.accountRepository.findById(id);
-        if(optionalAccount.isEmpty())
-        {
+        if (optionalAccount.isEmpty()) {
             try {
                 throw new DataNotFoundException("No data fount for this id");
             } catch (DataNotFoundException e) {
                 throw new RuntimeException(e);
             }
-        }else {
+        } else {
             try {
                 this.accountRepository.delete(optionalAccount.get());
-            }catch (Exception e)
-            {
-                throw new RuntimeException("Error on deleting account"+e.getMessage());
+            } catch (Exception e) {
+                throw new RuntimeException("Error on deleting account" + e.getMessage());
             }
         }
         return null;
@@ -135,7 +129,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Boolean isValidAccount(Long accountId) {
-        if(!CustomUtil.isValidObject(accountId)){
+        if (!CustomUtil.isValidObject(accountId)) {
             return false;
         }
         return this.accountRepository.existsById(accountId);
@@ -143,10 +137,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getAccountById(Long accountId) {
-        if(!CustomUtil.isValidObject(accountId)){
+        if (!CustomUtil.isValidObject(accountId)) {
             return null;
         }
-        Optional<Account> optionalAccount =  this.accountRepository.findById(accountId);
+        Optional<Account> optionalAccount = this.accountRepository.findById(accountId);
         return optionalAccount.orElse(null);
     }
 
@@ -155,10 +149,10 @@ public class AccountServiceImpl implements AccountService {
         ResponseDTO responseDTO = new ResponseDTO();
         ErrorDTO errorDTO = new ErrorDTO();
         Account account = this.getAccountById(accountId);
-        if(account!=null) {
+        if (account != null) {
 //            improvement pending
             responseDTO.setContent(account);
-        }else {
+        } else {
             errorDTO.setIsError(true);
             errorDTO.setErrorCode(1);
             errorDTO.setErrorMessage("account not found");
@@ -170,7 +164,7 @@ public class AccountServiceImpl implements AccountService {
     public List<String> isValidAccountDTO(AccountRequestDTO accountDTO) {
         List<String> errors = new ArrayList<>();
 
-        if (accountDTO.getUser() == null) {
+        if (accountDTO.getUserId() == null) {
             errors.add("User cannot be null");
         }
         if (accountDTO.getAccountNumber() == null) {

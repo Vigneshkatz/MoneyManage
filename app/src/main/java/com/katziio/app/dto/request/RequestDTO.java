@@ -1,6 +1,6 @@
 package com.katziio.app.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestDTO {
-    @JsonIgnore
+    @Nullable
     private Boolean isAccountDto;
-    @JsonIgnore
+    @Nullable
     private AccountRequestDTO accountDTO;
 }
